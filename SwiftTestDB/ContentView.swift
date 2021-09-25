@@ -38,7 +38,7 @@ struct ContentView: View {
             let newItem = Item(context: viewContext)
             newItem.id = UUID.init()
             newItem.timestamp = Date()
-            newItem.title = "Version-2"
+            newItem.title = "Version-3"
 
             do {
                 try viewContext.save()
