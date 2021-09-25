@@ -19,7 +19,7 @@ struct ContentView: View {
     var body: some View {
         List {
             ForEach(items) { item in
-                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                Text(" \(item.title!) \(item.timestamp!, formatter: itemFormatter)")
             }
             .onDelete(perform: deleteItems)
         }
@@ -27,13 +27,18 @@ struct ContentView: View {
             Button(action: addItem) {
                 Label("Add Item", systemImage: "plus")
             }
+            Button(action: deleteItem){
+                Label("Delete Item", systemImage:"minus")
+            }
         }
     }
 
     private func addItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
+            newItem.id = UUID.init()
             newItem.timestamp = Date()
+            newItem.title = "Test Title"
 
             do {
                 try viewContext.save()
@@ -46,6 +51,18 @@ struct ContentView: View {
         }
     }
 
+    private func deleteItem() {
+        withAnimation {
+            viewContext.delete(items.first!)
+             do {
+                  try viewContext.save()
+              } catch {
+                  let nsError2 = error as NSError
+                  fatalError("Can't delete \(nsError2), \(nsError2.userInfo)")
+              }
+            
+        }
+    }
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
